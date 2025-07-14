@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../uploads/middleware/upload');
-const Student = require('../models/student1');
+const Student = require('../models/student');
 const Course = require('../models/course');
 
 // CREATE or UPDATE student based on regNo
