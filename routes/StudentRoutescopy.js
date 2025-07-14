@@ -80,29 +80,29 @@ router.delete('/:regNo', async (req, res) => {
 });
 
 // Universal search by regNo, fullName, certificateNumber, or whatsappNumber
-router.get('/search', async (req, res) => {
-  const q = req.query.q;
+router.get("/search", async (req, res) => {
+  const { q } = req.query;
+
   try {
     const student = await Student.findOne({
       $or: [
-        { regNo: { $regex: q, $options: 'i' } },
-        { fullName: { $regex: q, $options: 'i' } },
-        { certificateNumber: { $regex: q, $options: 'i' } },
-        { whatsappNumber: { $regex: q, $options: 'i' } }
-      ]
+        { regNo: q },
+        { fullName: { $regex: q, $options: "i" } },
+        { certificateNumber: q }
+      ],
     });
 
-    if (!student) return res.status(404).json({ message: 'Student not found' });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
 
-    res.json({
-      ...student._doc,
-      filePath: student.file
-    });
-  } catch (err) {
-    console.error('❌ Error in /search route:', err);
-    res.status(500).json({ message: 'Server error' });
+    res.json(student);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // Autocomplete Course Suggestions
 router.get('/courses/search', async (req, res) => {
