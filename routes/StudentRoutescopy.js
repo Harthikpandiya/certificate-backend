@@ -5,6 +5,59 @@ const upload = require('../uploads/middleware/upload');
 const Student = require('../models/student');
 const Course = require('../models/course');
 
+
+
+
+
+
+
+// Universal Search
+router.get('/search', async (req, res) => {
+  const q = req.query.q;
+
+  try {
+    const student = await Student.findOne({
+      $or: [
+        { regNo: { $regex: q, $options: 'i' } },
+        { fullName: { $regex: q, $options: 'i' } },
+        { certificateNumber: { $regex: q, $options: 'i' } },
+        { whatsappNumber: { $regex: q, $options: 'i' } }
+      ]
+    });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const modifiedStudent = {
+      ...student._doc,
+      filePath: student.file
+    };
+
+    res.json(modifiedStudent);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // CREATE or UPDATE student based on regNo
 router.post('/', upload.single('file'), async (req, res) => {
   try {
