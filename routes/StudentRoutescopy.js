@@ -11,21 +11,23 @@ const Course = require('../models/course');
 
 
 
-// 🔍 Universal Search
+// 🔍 Universal Search route
 router.get('/search', async (req, res) => {
-  const q = req.query.q;
+  const query = req.query.q;
 
   try {
     const student = await Student.findOne({
       $or: [
-        { regNo: { $regex: q, $options: 'i' } },
-        { fullName: { $regex: q, $options: 'i' } },
-        { certificateNumber: { $regex: q, $options: 'i' } },
-        { whatsappNumber: { $regex: q, $options: 'i' } }
+        { regNo: { $regex: query, $options: 'i' } },
+        { fullName: { $regex: query, $options: 'i' } },
+        { certificateNumber: { $regex: query, $options: 'i' } },
+        { whatsappNumber: { $regex: query, $options: 'i' } }
       ]
     });
 
-    if (!student) return res.status(404).json({ message: "Student not found" });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
 
     const modifiedStudent = {
       ...student._doc,
@@ -34,9 +36,10 @@ router.get('/search', async (req, res) => {
 
     res.json(modifiedStudent);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 });
+
 
 
 
