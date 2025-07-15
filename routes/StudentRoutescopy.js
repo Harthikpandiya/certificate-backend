@@ -11,7 +11,7 @@ const Course = require('../models/course');
 
 
 
-// Universal Search
+// 🔍 Universal Search
 router.get('/search', async (req, res) => {
   const q = req.query.q;
 
@@ -25,9 +25,7 @@ router.get('/search', async (req, res) => {
       ]
     });
 
-    if (!student) {
-      return res.status(404).json({ message: "Student not found" });
-    }
+    if (!student) return res.status(404).json({ message: "Student not found" });
 
     const modifiedStudent = {
       ...student._doc,
@@ -39,6 +37,7 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 
