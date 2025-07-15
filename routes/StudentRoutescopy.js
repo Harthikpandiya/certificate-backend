@@ -291,35 +291,64 @@ router.post('/', upload.single('file'), async (req, res) => {
 // });
 
 // 🔍 Universal Search route
+// router.get('/search', async (req, res) => {
+//   const query = req.query.q;
+
+//   try {
+//     const student = await Student.findOne({
+//       $or: [
+//         { regNo: { $regex: query, $options: 'i' } },
+//         { fullName: { $regex: query, $options: 'i' } },
+//         { certificateNumber: { $regex: query, $options: 'i' } },
+//         { whatsappNumber: { $regex: query, $options: 'i' } }
+//       ]
+//     });
+
+//     if (!student) {
+//       return res.status(404).json({ message: "Student not found" });
+//     }
+
+//     // ✅ Add this part to include image filename in response
+//     const modifiedStudent = {
+//       ...student._doc,
+//       filePath: student.file // 👈 this helps frontend set preview image
+//     };
+
+//     res.json(modifiedStudent);
+//   } catch (err) {
+//     res.status(500).json({ message: "Server Error", error: err.message });
+//   }
+// });
+
+// 🔍 Universal Search route
 router.get('/search', async (req, res) => {
   const query = req.query.q;
 
   try {
     const student = await Student.findOne({
       $or: [
-        { regNo: { $regex: query, $options: 'i' } },
-        { fullName: { $regex: query, $options: 'i' } },
-        { certificateNumber: { $regex: query, $options: 'i' } },
-        { whatsappNumber: { $regex: query, $options: 'i' } }
-      ]
+        { regNo: { $regex: query, $options: "i" } },
+        { fullName: { $regex: query, $options: "i" } },
+        { certificateNumber: { $regex: query, $options: "i" } },
+      ],
     });
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // ✅ Add this part to include image filename in response
+    // ✅ Add filePath before sending
     const modifiedStudent = {
       ...student._doc,
-      filePath: student.file // 👈 this helps frontend set preview image
+      filePath: `/uploads/${student.file}`,
     };
 
     res.json(modifiedStudent);
-  } catch (err) {
-    res.status(500).json({ message: "Server Error", error: err.message });
+  } catch (error) {
+    console.error("Error in search:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
-
 
 
 
