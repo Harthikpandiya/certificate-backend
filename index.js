@@ -26,9 +26,7 @@ app.get('/', (req, res) => {
 
 // API route
 app.use('/api/students', require('./routes/StudentRoutescopy'));
-app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
-});
+
 
 // Start server
 app.listen(PORT, () => {
