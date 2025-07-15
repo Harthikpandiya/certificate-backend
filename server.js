@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 // API route
-app.use('/api/students', require('./routes/StudentRoutescopy'));
+app.use('/students', require('./routes/StudentRoutescopy'));
 
 // Start server
 app.listen(PORT, () => {
